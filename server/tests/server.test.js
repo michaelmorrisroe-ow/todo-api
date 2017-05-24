@@ -1,12 +1,18 @@
 const expect = require('expect');
 const request = require('supertest');
 const mocha = require('mocha'); // to make ts play nice
+const {ObjectID} = require('mongodb')
 
 const {app} = require('./../server');
 const {Todo} = require('./../models/todo')
 
+let testID = new ObjectID();
+let wrongID = new ObjectID();
+console.log(testID !== wrongID);
+
 let testDos = [
-  {text: 'first test todo'},
+  {_id: testID,
+    text: 'first test todo'},
   {text: 'second test todo'},
   {text: 'final test todo'}
   ];
@@ -74,3 +80,30 @@ describe('GET /todos', () => {
       .end(done);
     });
   });
+
+describe('GET /todos/:id', () => {
+  it('should return a todo with a specific ID', done => {
+    
+    request(app)
+    .get(`/todos/${testID}`)
+    .expect(200)
+    .expect(res => {
+      expect(res.body.todo.text).toBe(testDos[0].text)
+    })
+    .end(done);
+  });
+
+  it('should return 404 if todo not found', (done) => {
+    request(app)
+    .get(`/todos/${wrongID}`)
+    .expect(404)
+    .end(done);
+  });
+
+  it('should return 404 for non-object IDs', done => {
+    request(app)
+    .get(`/todos/${wrongID + '1234'}`)
+    .expect(404)
+    .end(done);
+  });
+});
