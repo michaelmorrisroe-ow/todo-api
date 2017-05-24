@@ -16,7 +16,7 @@ MongoClient.connect('mongodb://localhost:27017/TodoApp', (err, db) => {
     db.collection('Users')
     .findOneAndUpdate({name: 'Jen'},
     { $inc: {age: 1}},
-    {returnOriginal: true})
+    { returnOriginal: true})
     .then(res => console.log(res))
 
     // db.close();
