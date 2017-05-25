@@ -1,3 +1,5 @@
+require('./config/config'); //why does this throw an error?
+
 const express = require('express');
 const bodyParser = require('body-parser');
 const _ = require('lodash');
@@ -8,7 +10,7 @@ let {Todo} = require('./models/todo')
 let {ObjectID} = require('mongodb');
 
 let app = express();
-const port = process.env.PORT || 3000;
+const port = process.env.PORT;
 
 app.use(bodyParser.json());
 
