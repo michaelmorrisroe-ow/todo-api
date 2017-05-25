@@ -67,7 +67,6 @@ app.patch('/todos/:id', (req, res) => {
     }
 
     if (_.isBoolean(body.completed) && (body.completed)) {
-        console.log('if statement completed');
         body.completedAt = new Date().getTime();
     } else {
         body.completed = false;
@@ -79,9 +78,6 @@ app.patch('/todos/:id', (req, res) => {
         if(!todo) {
             return res.status(404).send();
         }
-        console.log(body);
-        console.log(_.isBoolean(body.completed), 'completed is bool');
-        console.log((body.completed), 'completed is true');
         res.send({todo});
     }).catch(e => {
         res.status(400).send();
