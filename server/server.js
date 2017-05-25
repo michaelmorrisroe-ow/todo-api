@@ -27,12 +27,9 @@ app.get('/todos', (req, res) => {
     }, e => res.status(400).send(e));
 });
 
-// GET /todos/1234234
 app.get('/todos/:id', (req, res) => {
     let id = req.params.id;
 
-    // valid id
-        // 404 - send back empty send
     if (!ObjectID.isValid(id)) {
         res.status(404).send();
     }
@@ -42,17 +39,23 @@ app.get('/todos/:id', (req, res) => {
         }
         res.send({todo});
     }).catch(e => res.status(404).send());
-
-    
-
-    // find byid
-        // success
-            // if todo - send back
-            // if no todo - send back 404 w/empty body
-        // error
-            // 400 - send empty body back
-    
 });
+
+app.delete('/todos/:id', (req, res) => {
+    let id = req.params.id;
+
+    if (!ObjectID.isValid(id)) {
+        return res.status(404).send();
+    }
+    Todo.findByIdAndRemove(id).then(todo => {
+        if (!todo) {
+            res.status(404)
+            .send('No Todo with matching ID')
+        }
+        res.status(200).send({todo});
+    }).catch(e => res.status(400).send())
+
+})
 
 app.listen(port, () => {
     console.log(`Listening on port ${port}`);
